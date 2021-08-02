@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">AndroidAcademyProject</string>
+
+    <string name="back_text_view_content">Back</string>
+    <string name="background_image_description">Background image</string>
+    <string name="back_arrow_image_description">Back arrow image</string>
+    <string name="star_image_description">Star image</string>
+    <string name="storyline_text_view_content">Storyline</string>
+
+    <string name="cast_text_view_content">Cast</string>
+
+    <string name="actor_1_image_description">Actor 1 image</string>
+    <string name="actor_2_image_description">Actor 2 image</string>
+    <string name="actor_3_image_description">Actor 3 image</string>
+    <string name="actor_4_image_description">Actor 4 image</string>
+
+    <string name="actor_1_text_view_content">Robert Downey Jr.</string>
+    <string name="actor_2_text_view_content">Chris Evans</string>
+    <string name="actor_3_text_view_content">Mark Ruffalo</string>
+    <string name="actor_4_text_view_content">Chris Hemsworth</string>
+
+<!--    Movies list fragment string resources-->
+    <string name="movies_list_page_name">Movies list</string>
+
+    <string name="movie_card_main_image">movies_list_film_main_image</string>
+    <string name="legal_age_tv_background">movies_list_legal_age_tv_background</string>
+    <string name="page_name_iv">movies_list_page_name_iv</string>
+    <string name="movies_list_like_iv">movies_list_like_iv</string>
+    <string name="movies_list_star">movies_list_star</string>
+
+<!--    First Film-->
+    <string name="movie_name_text_view_content1">Avengers: End Game</string>
+    <string name="legal_age_text_view_content1">13+</string>
+    <string name="category_text_view_content1">Action, Adventure, Fantasy</string>
+    <string name="count_reviews_text_view_content1">125 REVIEWS</string>
+    <string name="storyline_content_text_view_content1">After the devastating events of Avengers:
+        Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers
+        assemble once more in order to reverse Thanos\' actions and restore balance to the
+        universe.</string>
+    <string name="movie_duration_content1">137 MIN</string>
+
+    <!--    Second Film-->
+    <string name="movie_name_text_view_content2">Tenet</string>
+    <string name="legal_age_text_view_content2">16+</string>
+    <string name="category_text_view_content2">Action, Sci-Fi, Thriller</string>
+    <string name="count_reviews_text_view_content2">98 REVIEWS</string>
+    <string name="storyline_content_text_view_content2">After the devastating events of Avengers:
+        Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers
+        assemble once more in order to reverse Thanos\' actions and restore balance to the
+        universe.</string>
+    <string name="movie_duration_content2">97 MIN</string>
+
+    <!--    Second Film-->
+    <string name="movie_name_text_view_content3">Black Widow</string>
+    <string name="legal_age_text_view_content3">13+</string>
+    <string name="category_text_view_content3">Action, Adventure, Sci-Fi</string>
+    <string name="count_reviews_text_view_content3">38 REVIEWS</string>
+    <string name="storyline_content_text_view_content3">After the devastating events of Avengers:
+        Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers
+        assemble once more in order to reverse Thanos\' actions and restore balance to the
+        universe.</string>
+    <string name="movie_duration_content3">102 MIN</string>
+
+    <!--    Second Film-->
+    <string name="movie_name_text_view_content4">Wonder Woman 1984</string>
+    <string name="legal_age_text_view_content4">13+</string>
+    <string name="category_text_view_content4">Action, Adventure, Fantasy</string>
+    <string name="count_reviews_text_view_content4">74 REVIEWS</string>
+    <string name="storyline_content_text_view_content4">After the devastating events of Avengers:
+        Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers
+        assemble once more in order to reverse Thanos\' actions and restore balance to the
+        universe.</string>
+    <string name="movie_duration_content4">120 MIN</string>
+</resources>

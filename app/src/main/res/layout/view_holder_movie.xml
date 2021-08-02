@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/card_shape"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/movies_list_film_main_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/movie_card_main_image"
+        android:cropToPadding="false"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/movie1" />
+
+    <ImageView
+        android:id="@+id/movies_list_legal_age_tv_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/legal_age_tv_background"
+        app:layout_constraintStart_toStartOf="@+id/movies_list_film_main_image"
+        app:layout_constraintTop_toTopOf="@+id/movies_list_film_main_image"
+        app:srcCompat="@drawable/ic_rectangle" />
+
+    <TextView
+        android:id="@+id/movies_list_legal_age_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_legal_age_tv_background"
+        app:layout_constraintEnd_toEndOf="@+id/movies_list_legal_age_tv_background"
+        app:layout_constraintStart_toStartOf="@+id/movies_list_legal_age_tv_background"
+        app:layout_constraintTop_toTopOf="@+id/movies_list_legal_age_tv_background" />
+
+    <ImageView
+        android:id="@+id/movies_list_like_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/movies_list_like_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_legal_age_tv_background"
+        app:layout_constraintEnd_toEndOf="@+id/movies_list_film_main_image"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/movies_list_legal_age_tv_background"
+        app:layout_constraintTop_toTopOf="@+id/movies_list_legal_age_tv_background"
+        app:srcCompat="@drawable/ic_like" />
+
+    <TextView
+        android:id="@+id/movies_list_category_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/category_text_view_content1"
+        android:textColor="@color/pink_text_color"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toTopOf="@+id/movies_list_star_1"
+        app:layout_constraintStart_toStartOf="@+id/movies_list_film_main_image" />
+
+    <ImageView
+        android:id="@+id/movies_list_star_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/movies_list_star"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_film_main_image"
+        app:layout_constraintStart_toStartOf="@+id/movies_list_film_main_image"
+        app:srcCompat="@drawable/ic_star" />
+
+    <ImageView
+        android:id="@+id/movies_list_star_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:contentDescription="@string/movies_list_star"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_star_1"
+        app:layout_constraintStart_toEndOf="@+id/movies_list_star_1"
+        app:srcCompat="@drawable/ic_star" />
+
+    <ImageView
+        android:id="@+id/movies_list_star_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:contentDescription="@string/movies_list_star"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_star_2"
+        app:layout_constraintStart_toEndOf="@+id/movies_list_star_2"
+        app:srcCompat="@drawable/ic_star" />
+
+    <ImageView
+        android:id="@+id/movies_list_star_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:contentDescription="@string/movies_list_star"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_star_3"
+        app:layout_constraintStart_toEndOf="@+id/movies_list_star_3"
+        app:srcCompat="@drawable/ic_star" />
+
+    <ImageView
+        android:id="@+id/movies_list_star_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:contentDescription="@string/movies_list_star"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_star_4"
+        app:layout_constraintStart_toEndOf="@+id/movies_list_star_4"
+        app:srcCompat="@drawable/ic_star" />
+
+    <TextView
+        android:id="@+id/movies_list_count_reviews_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center_vertical"
+        android:text="@string/count_reviews_text_view_content1"
+        android:textColor="@color/grey_text_color"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/movies_list_star_5"
+        app:layout_constraintStart_toEndOf="@+id/movies_list_star_5" />
+
+    <TextView
+        android:id="@+id/movies_list_film_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/movie_name_text_view_content1"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/movies_list_film_main_image"
+        app:layout_constraintTop_toBottomOf="@+id/movies_list_film_main_image" />
+
+    <TextView
+        android:id="@+id/movies_list_film_duration_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/movie_duration_content1"
+        android:textColor="@color/grey_text_color"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/movies_list_film_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/movies_list_film_name_tv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
