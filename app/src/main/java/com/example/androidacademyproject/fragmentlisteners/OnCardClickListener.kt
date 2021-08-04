@@ -1,5 +1,7 @@
 package com.example.androidacademyproject.fragmentlisteners
 
+import com.example.androidacademyproject.model.Movie
+
 interface OnCardClickListener {
-    fun openFragment()
+    fun openMovieDetails(movie: Movie)
 }

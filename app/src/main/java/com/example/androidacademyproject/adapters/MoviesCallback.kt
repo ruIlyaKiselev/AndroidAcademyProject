@@ -1,14 +1,14 @@
 package com.example.androidacademyproject.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.androidacademyproject.dataclasses.MovieData
+import com.example.androidacademyproject.model.Movie
 
-class MoviesCallback: DiffUtil.ItemCallback<MovieData>() {
-    override fun areItemsTheSame(oldItem: MovieData, newItem: MovieData): Boolean {
-        return oldItem.movieName == newItem.movieName
+class MoviesCallback: DiffUtil.ItemCallback<Movie>() {
+    override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: MovieData, newItem: MovieData): Boolean {
+    override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
         return oldItem == newItem
     }
 }

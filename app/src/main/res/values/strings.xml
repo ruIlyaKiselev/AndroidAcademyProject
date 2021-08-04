@@ -71,4 +71,10 @@
         assemble once more in order to reverse Thanos\' actions and restore balance to the
         universe.</string>
     <string name="movie_duration_content4">120 MIN</string>
+    <string name="error_movie_not_found">Movies not found</string>
+
+
+    <string name="movies_list_allowed_age_template">%d+</string>
+    <string name="movies_list_reviews_template">%d REVIEWS</string>
+    <string name="movies_list_film_time">%d MIN</string>
 </resources>
