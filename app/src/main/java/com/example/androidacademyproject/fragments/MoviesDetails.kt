@@ -57,6 +57,8 @@ class MoviesDetails: Fragment()  {
 
             if (movie != null) {
                 bindUI(view, movie)
+            } else {
+                showMovieNotFoundError()
             }
         }
     }
@@ -127,13 +129,6 @@ class MoviesDetails: Fragment()  {
 
     companion object {
         private const val PARAM_MOVIE_ID = "movie_id"
-
-        fun newInstance(): MoviesDetails {
-            val args = Bundle()
-            val fragment = MoviesDetails()
-            fragment.arguments = args
-            return fragment
-        }
 
         fun create(movieId: Int) = MoviesDetails().also {
             val args = bundleOf(

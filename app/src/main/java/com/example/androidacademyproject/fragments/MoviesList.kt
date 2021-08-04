@@ -70,13 +70,6 @@ class MoviesList : Fragment() {
     }
 
     companion object {
-        fun newInstance(): MoviesList {
-            val args = Bundle()
-            val fragment = MoviesList()
-            fragment.arguments = args
-            return fragment
-        }
-
         fun create() = MoviesList()
     }
 }
