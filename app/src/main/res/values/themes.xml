@@ -19,4 +19,16 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="topRoundedImageView" parent="">
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeTopRight">8dp</item>
+    </style>
+
+    <style name="roundedImageView" parent="">
+        <item name="cornerSizeTopLeft">8dp</item>
+        <item name="cornerSizeTopRight">8dp</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
+        <item name="cornerSizeBottomRight">8dp</item>
+    </style>
+
 </resources>

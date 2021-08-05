@@ -7,12 +7,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/actor_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/actor_1_image_description"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
             app:srcCompat="@drawable/actor1" />
 
         <TextView

@@ -9,7 +9,7 @@
     android:background="@drawable/card_shape"
     android:padding="3dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/movies_list_film_main_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -20,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/topRoundedImageView"
         app:srcCompat="@drawable/movie1" />
 
     <ImageView
