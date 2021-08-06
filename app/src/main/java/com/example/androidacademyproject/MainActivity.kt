@@ -1,13 +1,14 @@
 package com.example.androidacademyproject
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.androidacademyproject.data.JsonMovieRepository
 import com.example.androidacademyproject.data.MovieRepository
 import com.example.androidacademyproject.fragmentlisteners.OnBackClickListener
 import com.example.androidacademyproject.fragmentlisteners.OnCardClickListener
-import com.example.androidacademyproject.fragments.MoviesDetails
-import com.example.androidacademyproject.fragments.MoviesList
+import com.example.androidacademyproject.fragments.MoviesListDirections
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.providers.MovieRepositoryProvider
 
@@ -17,14 +18,12 @@ class MainActivity : AppCompatActivity(),
         MovieRepositoryProvider {
 
     private val jsonMovieRepository = JsonMovieRepository(this)
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if (savedInstanceState == null) {
-            routeToMoviesList()
-        }
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
     }
 
     override fun openMovieDetails(movie: Movie) {
@@ -36,29 +35,15 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun routeToMoviesList() {
-        supportFragmentManager.beginTransaction()
-                .add(
-                        R.id.main_container,
-                        MoviesList.create(),
-                        MoviesList::class.java.simpleName
-                )
-                .addToBackStack("trans:${MoviesList::class.java.simpleName}")
-                .commit()
+        navController.navigate(R.id.action_moviesDetails_to_moviesList)
     }
 
     private fun routeToMovieDetails(movie: Movie) {
-        supportFragmentManager.beginTransaction()
-                .replace(
-                        R.id.main_container,
-                        MoviesDetails.create(movie.id),
-                        MoviesDetails::class.java.simpleName
-                )
-                .addToBackStack("trans:${MoviesDetails::class.java.simpleName}")
-                .commit()
+        navController.navigate(MoviesListDirections.actionMoviesListToMoviesDetails(movie.id))
     }
 
     private fun routeBack() {
-        supportFragmentManager.popBackStack()
+        navController.navigateUp()
     }
 
     override fun provideMovieRepository(): MovieRepository = jsonMovieRepository

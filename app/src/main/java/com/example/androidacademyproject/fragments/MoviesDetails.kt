@@ -15,6 +15,7 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -29,6 +30,8 @@ class MoviesDetails: Fragment()  {
 
     private var onBackClickListener: OnBackClickListener? = null
 
+    val args: MoviesDetailsArgs by navArgs()
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -41,7 +44,7 @@ class MoviesDetails: Fragment()  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val movieId = arguments?.getSerializable(PARAM_MOVIE_ID) as? Int ?: return
+        val movieId = args.movieId
         val list = view.findViewById<RecyclerView>(R.id.movies_details_recycler_view)
         list.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
 
@@ -90,8 +93,6 @@ class MoviesDetails: Fragment()  {
     }
 
     private fun updateMovieDetailsInfo(movie: Movie) {
-//        view?.findViewById<ImageView>(R.id.movies_details_background_image)
-//                ?.setImageURI(Uri.parse(movie.detailImageUrl))
         view?.findViewById<ImageView>(R.id.movies_details_background_image)
             ?.load(movie.detailImageUrl)
 

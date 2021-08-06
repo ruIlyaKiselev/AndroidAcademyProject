@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/moviesList">
+
+    <fragment
+        android:id="@+id/moviesList"
+        android:name="com.example.androidacademyproject.fragments.MoviesList"
+        android:label="MoviesList" >
+        <action
+            android:id="@+id/action_moviesList_to_moviesDetails"
+            app:destination="@id/moviesDetails"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/moviesDetails"
+        android:name="com.example.androidacademyproject.fragments.MoviesDetails"
+        android:label="MoviesDetails" >
+        <action
+            android:id="@+id/action_moviesDetails_to_moviesList"
+            app:destination="@id/moviesList"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="movie_id"
+            app:argType="integer" />
+    </fragment>
+</navigation>
