@@ -6,16 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.androidacademyproject.fragmentlisteners.OnCardClickListener
 import com.example.androidacademyproject.R
 import com.example.androidacademyproject.adapters.MoviesAdapter
+import com.example.androidacademyproject.data.MovieRepository
+import com.example.androidacademyproject.fragmentlisteners.OnCardClickListener
 import com.example.androidacademyproject.providers.MovieRepositoryProvider
+import com.example.androidacademyproject.viewmodels.MoviesListViewModel
+import com.example.androidacademyproject.viewmodels.MoviesListViewModelFactory
 import kotlinx.coroutines.launch
 
 class MoviesList : Fragment() {
+
+    lateinit var moviesListViewModel: MoviesListViewModel
 
     private var onItemClickListener: OnCardClickListener? = null
 
@@ -30,28 +36,41 @@ class MoviesList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val list = view.findViewById<RecyclerView>(R.id.movies_list_recycler_view)
-        list.layoutManager = GridLayoutManager(
-                view.context,
+        val adapter = MoviesAdapter { movieData ->
+            onItemClickListener?.openMovieDetails(movieData)
+        }
+
+        val movieRepository = (requireActivity() as MovieRepositoryProvider).provideMovieRepository()
+
+        initRecyclerView(adapter)
+        initMoviesListViewModel(adapter, movieRepository)
+    }
+
+    private fun initRecyclerView(adapter: MoviesAdapter) {
+        val list = view?.findViewById<RecyclerView>(R.id.movies_list_recycler_view)
+        list?.layoutManager = GridLayoutManager(
+                view?.context,
                 2,
                 RecyclerView.VERTICAL,
                 false
         )
 
-        val adapter = MoviesAdapter { movieData ->
-            onItemClickListener?.openMovieDetails(movieData)
-        }
+        list?.adapter = adapter
+    }
 
-        list.adapter = adapter
-        loadDataToAdapter(adapter)
+    private fun initMoviesListViewModel(adapter: MoviesAdapter, movieRepository: MovieRepository) {
+        moviesListViewModel = ViewModelProvider(this,
+                MoviesListViewModelFactory(movieRepository)).get(MoviesListViewModel::class.java)
+
+        moviesListViewModel.moviesList.observe(this.viewLifecycleOwner, {
+            loadDataToAdapter(adapter)
+        })
     }
 
     private fun loadDataToAdapter(adapter: MoviesAdapter) {
-        val repository = (requireActivity() as MovieRepositoryProvider).provideMovieRepository()
         lifecycleScope.launch {
-            val moviesData = repository.loadMovies()
-
-            adapter.submitList(moviesData)
+            val moviesData = moviesListViewModel.moviesList
+            adapter.submitList(moviesData.value)
         }
     }
 

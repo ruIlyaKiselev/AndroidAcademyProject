@@ -11,22 +11,25 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.androidacademyproject.R
 import com.example.androidacademyproject.adapters.ActorsAdapter
+import com.example.androidacademyproject.data.MovieRepository
 import com.example.androidacademyproject.fragmentlisteners.OnBackClickListener
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.providers.MovieRepositoryProvider
-import kotlinx.coroutines.launch
+import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModel
+import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModelFactory
 
 class MoviesDetails: Fragment()  {
+
+    lateinit var moviesDetailsViewModel: MoviesDetailsViewModel
 
     private var onBackClickListener: OnBackClickListener? = null
 
@@ -45,25 +48,35 @@ class MoviesDetails: Fragment()  {
         super.onViewCreated(view, savedInstanceState)
 
         val movieId = args.movieId
-        val list = view.findViewById<RecyclerView>(R.id.movies_details_recycler_view)
-        list.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+        val actorsAdapter = ActorsAdapter()
+        val movieRepository = (requireActivity() as MovieRepositoryProvider).provideMovieRepository()
 
-        view.findViewById<LinearLayout>(R.id.movies_details_back_composite_button).setOnClickListener {
+        initBackButton()
+        initRecyclerView(actorsAdapter)
+        initMoviesDetailsViewModel(movieId, movieRepository)
+    }
+
+    private fun initBackButton() {
+        view?.findViewById<LinearLayout>(R.id.movies_details_back_composite_button)?.setOnClickListener {
             onBackClickListener?.backToMoviesList()
         }
+    }
 
-        list.adapter = ActorsAdapter()
+    private fun initRecyclerView(adapter: ActorsAdapter) {
+        val list = view?.findViewById<RecyclerView>(R.id.movies_details_recycler_view)
+        list?.layoutManager = LinearLayoutManager(view?.context, RecyclerView.HORIZONTAL, false)
 
-        lifecycleScope.launch {
-            val repository = (requireActivity() as MovieRepositoryProvider).provideMovieRepository()
-            val movie = repository.loadMovie(movieId)
+        list?.adapter = adapter
+    }
 
-            if (movie != null) {
-                bindUI(view, movie)
-            } else {
-                showMovieNotFoundError()
-            }
-        }
+    private fun initMoviesDetailsViewModel(movieId: Int, movieRepository: MovieRepository) {
+        moviesDetailsViewModel = ViewModelProvider(this,
+                MoviesDetailsViewModelFactory(movieRepository)).get(MoviesDetailsViewModel::class.java)
+
+        moviesDetailsViewModel.loadMovie(movieId)
+        moviesDetailsViewModel.movie.observe(this.viewLifecycleOwner, {
+            bindUI(view, moviesDetailsViewModel.movie.value)
+        })
     }
 
     private fun showMovieNotFoundError() {
@@ -71,11 +84,11 @@ class MoviesDetails: Fragment()  {
                 .show()
     }
 
-    private fun bindUI(view: View, movie: Movie) {
+    private fun bindUI(view: View?, movie: Movie?) {
         updateMovieDetailsInfo(movie)
         val adapter =
-                view.findViewById<RecyclerView>(R.id.movies_details_recycler_view).adapter as ActorsAdapter
-        adapter.submitList(movie.actors)
+                view?.findViewById<RecyclerView>(R.id.movies_details_recycler_view)?.adapter as ActorsAdapter
+        adapter.submitList(movie?.actors)
     }
 
     override fun onAttach(context: Context) {
@@ -92,7 +105,12 @@ class MoviesDetails: Fragment()  {
         onBackClickListener = null
     }
 
-    private fun updateMovieDetailsInfo(movie: Movie) {
+    private fun updateMovieDetailsInfo(movie: Movie?) {
+        if (movie == null) {
+            showMovieNotFoundError()
+            return
+        }
+
         view?.findViewById<ImageView>(R.id.movies_details_background_image)
             ?.load(movie.detailImageUrl)
 
@@ -125,17 +143,6 @@ class MoviesDetails: Fragment()  {
                     )
                 )
             }
-        }
-    }
-
-    companion object {
-        private const val PARAM_MOVIE_ID = "movie_id"
-
-        fun create(movieId: Int) = MoviesDetails().also {
-            val args = bundleOf(
-                    PARAM_MOVIE_ID to movieId
-            )
-            it.arguments = args
         }
     }
 }
