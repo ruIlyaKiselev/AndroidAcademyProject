@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.androidacademyproject.data.ApiMovieRepository
 import com.example.androidacademyproject.data.JsonMovieRepository
 import com.example.androidacademyproject.data.MovieRepository
 import com.example.androidacademyproject.fragmentlisteners.OnBackClickListener
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity(),
         MovieRepositoryProvider {
 
     private val jsonMovieRepository = JsonMovieRepository(this)
+    private val apiMovieRepository = ApiMovieRepository()
     lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,5 +48,5 @@ class MainActivity : AppCompatActivity(),
         navController.navigateUp()
     }
 
-    override fun provideMovieRepository(): MovieRepository = jsonMovieRepository
+    override fun provideMovieRepository(): MovieRepository = apiMovieRepository
 }

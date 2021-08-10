@@ -2,9 +2,11 @@ package com.example.androidacademyproject.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -65,6 +67,27 @@ class MoviesList : Fragment() {
         moviesListViewModel.moviesList.observe(this.viewLifecycleOwner, {
             loadDataToAdapter(adapter)
         })
+
+        moviesListViewModel.loadingFlag.observe(this.viewLifecycleOwner, {
+            showProgressBar(it)
+        })
+    }
+
+    private fun showProgressBar(loadingFlag: Boolean) {
+        lifecycleScope.launch {
+            val progressBar = view?.findViewById<ProgressBar>(R.id.movies_list_progress_bar)
+            val recyclerView = view?.findViewById<RecyclerView>(R.id.movies_list_recycler_view)
+
+            if (loadingFlag) {
+                Log.d("MyLog", "VISIBLE")
+                progressBar?.visibility = View.VISIBLE
+                recyclerView?.visibility = View.INVISIBLE
+            } else {
+                Log.d("MyLog", "GONE")
+                progressBar?.visibility = View.GONE
+                recyclerView?.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun loadDataToAdapter(adapter: MoviesAdapter) {

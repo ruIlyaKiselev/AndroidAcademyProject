@@ -77,4 +77,6 @@
     <string name="movies_list_allowed_age_template">%d+</string>
     <string name="movies_list_reviews_template">%d REVIEWS</string>
     <string name="movies_list_film_time">%d MIN</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search Hint</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.providers.MovieRepositoryProvider
 import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModel
 import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModelFactory
+import kotlinx.coroutines.launch
 
 class MoviesDetails: Fragment()  {
 
@@ -85,10 +87,12 @@ class MoviesDetails: Fragment()  {
     }
 
     private fun bindUI(view: View?, movie: Movie?) {
-        updateMovieDetailsInfo(movie)
-        val adapter =
-                view?.findViewById<RecyclerView>(R.id.movies_details_recycler_view)?.adapter as ActorsAdapter
-        adapter.submitList(movie?.actors)
+        lifecycleScope.launch {
+            updateMovieDetailsInfo(movie)
+            val adapter =
+                    view?.findViewById<RecyclerView>(R.id.movies_details_recycler_view)?.adapter as ActorsAdapter
+            adapter.submitList(movie?.actors)
+        }
     }
 
     override fun onAttach(context: Context) {
