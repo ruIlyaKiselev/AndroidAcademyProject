@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments
+package com.example.androidacademyproject.fragments.moviedetails
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
@@ -20,22 +17,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.androidacademyproject.R
-import com.example.androidacademyproject.adapters.ActorsAdapter
-import com.example.androidacademyproject.data.MovieRepository
-import com.example.androidacademyproject.fragmentlisteners.OnBackClickListener
+import com.example.androidacademyproject.repository.MovieRepository
+import com.example.androidacademyproject.fragments.fragmentlisteners.OnBackClickListener
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.providers.MovieRepositoryProvider
 import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModel
 import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModelFactory
 import kotlinx.coroutines.launch
 
-class MoviesDetails: Fragment()  {
+class MoviesDetailsFragment: Fragment()  {
 
     lateinit var moviesDetailsViewModel: MoviesDetailsViewModel
 
     private var onBackClickListener: OnBackClickListener? = null
 
-    val args: MoviesDetailsArgs by navArgs()
+    val args: MoviesDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -79,6 +75,28 @@ class MoviesDetails: Fragment()  {
         moviesDetailsViewModel.movie.observe(this.viewLifecycleOwner, {
             bindUI(view, moviesDetailsViewModel.movie.value)
         })
+
+        moviesDetailsViewModel.loadingFlag.observe(this.viewLifecycleOwner, {
+            showProgressBar(it)
+        })
+    }
+
+    private fun showProgressBar(loadingFlag: Boolean) {
+        lifecycleScope.launch {
+            val progressBar = view?.findViewById<ProgressBar>(R.id.movies_details_progress_bar)
+            val recyclerView = view?.findViewById<RecyclerView>(R.id.movies_details_recycler_view)
+
+            if (loadingFlag) {
+                progressBar?.visibility = View.VISIBLE
+                recyclerView?.visibility = View.INVISIBLE
+            } else {
+                if (moviesDetailsViewModel.movie.value != null) {
+                    bindUI(view, moviesDetailsViewModel.movie.value)
+                }
+                progressBar?.visibility = View.GONE
+                recyclerView?.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun showMovieNotFoundError() {

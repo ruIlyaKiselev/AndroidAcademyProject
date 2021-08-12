@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/moviesList"
-        android:name="com.example.androidacademyproject.fragments.MoviesList"
+        android:name="com.example.androidacademyproject.fragments.movieslist.MoviesListFragment"
         android:label="MoviesList" >
         <action
             android:id="@+id/action_moviesList_to_moviesDetails"
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/moviesDetails"
-        android:name="com.example.androidacademyproject.fragments.MoviesDetails"
+        android:name="com.example.androidacademyproject.fragments.moviedetails.MoviesDetailsFragment"
         android:label="MoviesDetails" >
         <action
             android:id="@+id/action_moviesDetails_to_moviesList"

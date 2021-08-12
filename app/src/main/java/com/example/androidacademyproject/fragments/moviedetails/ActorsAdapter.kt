@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.adapters
+package com.example.androidacademyproject.fragments.moviedetails
 
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +29,6 @@ class ActorsAdapter: ListAdapter<Actor, ActorsAdapter.ViewHolder>(ActorsCallback
         private val actorName: TextView? = itemView.findViewById(R.id.actor_name_text_view)
 
         fun bind(data: Actor) {
-//            actorImage?.setImageURI(Uri.parse(data.imageUrl))
             actorImage?.load(data.imageUrl)
             actorName?.text = data.name
         }

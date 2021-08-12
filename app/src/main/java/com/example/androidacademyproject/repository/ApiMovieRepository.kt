@@ -1,17 +1,20 @@
-package com.example.androidacademyproject.data
+package com.example.androidacademyproject.repository
 
-import android.util.Log
+import android.os.Parcelable
+import com.example.androidacademyproject.api.RetrofitDao
+import com.example.androidacademyproject.api.data.*
 import com.example.androidacademyproject.model.Actor
 import com.example.androidacademyproject.model.Genre
 import com.example.androidacademyproject.model.Movie
-import com.example.androidacademyproject.repository.Repository
 import com.example.androidacademyproject.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
-class ApiMovieRepository: MovieRepository {
-    private val repository: Repository = Repository()
+@Parcelize
+class ApiMovieRepository: MovieRepository, Parcelable {
+    private val repository: RetrofitDao = RetrofitDao()
     private val resultList: MutableList<Movie> = LinkedList()
 
     private suspend fun getPopularMoviesFromApi(apiKey: String,
@@ -41,7 +44,7 @@ class ApiMovieRepository: MovieRepository {
     private suspend fun getMovieCreditsFromApi(movieId: Int,
                                                apiKey: String,
                                                language: String
-    ): MovieCreditsMetaData{
+    ): MovieCreditsMetaData {
         val response = repository.getMovieCreditsMetaData(movieId, apiKey, language)
         return if (response.isSuccessful) {
             response.body() as MovieCreditsMetaData
@@ -53,20 +56,46 @@ class ApiMovieRepository: MovieRepository {
     private suspend fun getMovieDetailsFromApi(movieId: Int,
                                                apiKey: String,
                                                language: String
-    ): ApiMovieDetails{
+    ): ApiMovieDetails {
         val response = repository.getMovieDetailsMetaData(movieId, apiKey, language)
         return if (response.isSuccessful) {
-            Log.d("MyLog", "SUCCESS")
             response.body() as ApiMovieDetails
         } else {
-            Log.d("MyLog", "FAIL")
             return ApiMovieDetails(0, 0)
         }
     }
 
-    override suspend fun loadMovies(): List<Movie> = withContext(Dispatchers.IO) {
-        val requestResult = getPopularMoviesFromApi(Constants.API_KEY, Constants.DEFAULT_LANGUAGE, 1)
+    suspend fun prepareActorsList(movieId: Int): List<Actor> = withContext(Dispatchers.IO)  {
+        val actorsList = getMovieCreditsFromApi(
+                movieId,
+                Constants.API_KEY,
+                Constants.DEFAULT_LANGUAGE
+        ).cast
 
+        val actorsForMovieResult: MutableList<Actor> =  LinkedList<Actor>()
+
+        actorsList.forEach { item ->
+            if (item.imageUrl != null) {
+                actorsForMovieResult.add(
+                        Actor(
+                                item.id,
+                                item.name,
+                                Constants.IMAGE_BASE_URL + item.imageUrl
+                        )
+
+                )
+            }
+        }
+
+        return@withContext actorsForMovieResult
+    }
+
+    override suspend fun loadMovies(): List<Movie> = withContext(Dispatchers.IO) {
+        if (resultList.size != 0) {
+            return@withContext resultList
+        }
+
+        val requestResult = getPopularMoviesFromApi(Constants.API_KEY, Constants.DEFAULT_LANGUAGE, 1)
 
         val genres = getGenresListFromApi(Constants.API_KEY, Constants.DEFAULT_LANGUAGE).genres
 
@@ -74,20 +103,9 @@ class ApiMovieRepository: MovieRepository {
             val genresForResult: MutableList<Genre> = LinkedList()
             genres.forEach { apiGenre ->
                 if (movie.genreIds.contains(apiGenre.id)) {
-                    genresForResult.add(
-                            Genre(
-                                    apiGenre.id,
-                                    apiGenre.name
-                            )
-                    )
+                    genresForResult.add(Genre(apiGenre.id, apiGenre.name))
                 }
             }
-
-            val actorsList = getMovieCreditsFromApi(
-                    movie.id,
-                    Constants.API_KEY,
-                    Constants.DEFAULT_LANGUAGE
-            ).cast
 
             val movieDuration = getMovieDetailsFromApi(
                     movie.id,
@@ -95,22 +113,7 @@ class ApiMovieRepository: MovieRepository {
                     Constants.DEFAULT_LANGUAGE
             ).runtime
 
-            Log.d("MyLog", movieDuration.toString())
-
-            val actorsForMovieResult: MutableList<Actor> =  LinkedList<Actor>()
-
-            actorsList.forEach { item ->
-                if (item.imageUrl != null) {
-                    actorsForMovieResult.add(
-                            Actor(
-                                    item.id,
-                                    item.name,
-                                    Constants.IMAGE_BASE_URL + item.imageUrl
-                            )
-
-                    )
-                }
-            }
+            //val actorsForMovieResult = prepareActorsList(movie)
 
             resultList.add(
                     Movie(
@@ -125,7 +128,8 @@ class ApiMovieRepository: MovieRepository {
                             Constants.IMAGE_BASE_URL + movie.posterPath,
                             Constants.IMAGE_BASE_URL + movie.backdropPath,
                         movie.overview,
-                        actorsForMovieResult
+//                        actorsForMovieResult
+                        emptyList()
                     )
             )
         }
@@ -133,8 +137,16 @@ class ApiMovieRepository: MovieRepository {
     }
 
     override suspend fun loadMovie(movieId: Int): Movie? = withContext(Dispatchers.IO) {
+        if (resultList.size == 0) {
+            loadMovies()
+        }
+
         return@withContext resultList.find { movie ->
             movie.id == movieId
         }
+    }
+
+    override suspend fun loadActors(movieId: Int): List<Actor> {
+        return prepareActorsList(movieId)
     }
 }

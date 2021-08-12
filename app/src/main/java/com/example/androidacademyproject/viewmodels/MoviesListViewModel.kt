@@ -1,12 +1,11 @@
 package com.example.androidacademyproject.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidacademyproject.data.MovieRepository
 import com.example.androidacademyproject.model.Movie
+import com.example.androidacademyproject.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -18,7 +17,7 @@ class MoviesListViewModel(private val movieRepository: MovieRepository): ViewMod
     val loadingFlag: LiveData<Boolean> = mutableLoadingFlag
 
     init {
-        viewModelScope.launch() {
+        viewModelScope.launch(Dispatchers.Main) {
             loadMovies()
         }
     }
@@ -26,9 +25,11 @@ class MoviesListViewModel(private val movieRepository: MovieRepository): ViewMod
     private suspend fun loadMovies() {
 
         mutableLoadingFlag.value = true
-        val request = viewModelScope.launch() {
+        val request = viewModelScope.launch(Dispatchers.IO) {
             val moviesData = movieRepository.loadMovies()
-            mutableMoviesList.value = moviesData
+            launch(Dispatchers.Main) {
+                mutableMoviesList.value = moviesData
+            }
         }
 
         request.join()

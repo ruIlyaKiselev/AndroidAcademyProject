@@ -1,10 +1,10 @@
-package com.example.androidacademyproject.repository
+package com.example.androidacademyproject.api
 
 import com.example.androidacademyproject.api.RetrofitInstance
-import com.example.androidacademyproject.data.*
+import com.example.androidacademyproject.api.data.*
 import retrofit2.Response
 
-class Repository {
+class RetrofitDao {
 
     suspend fun getPopularMoviesMetaData(apiKey: String, language: String, page: Int)
     : Response<MovieMetaData> {

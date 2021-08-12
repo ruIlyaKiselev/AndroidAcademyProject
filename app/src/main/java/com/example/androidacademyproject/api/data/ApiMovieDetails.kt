@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.data
+package com.example.androidacademyproject.api.data
 
 data class ApiMovieDetails (
         val id: Int,

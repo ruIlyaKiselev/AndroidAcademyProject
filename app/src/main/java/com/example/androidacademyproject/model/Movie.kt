@@ -14,5 +14,5 @@ data class Movie(
         val imageUrl: String,
         val detailImageUrl: String,
         val storyLine: String,
-        val actors: List<Actor>,
+        var actors: List<Actor>,
 ) : Serializable

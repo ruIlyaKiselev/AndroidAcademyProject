@@ -1,8 +1,7 @@
-package com.example.androidacademyproject.fragments
+package com.example.androidacademyproject.fragments.movieslist
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidacademyproject.R
-import com.example.androidacademyproject.adapters.MoviesAdapter
-import com.example.androidacademyproject.data.MovieRepository
-import com.example.androidacademyproject.fragmentlisteners.OnCardClickListener
+import com.example.androidacademyproject.repository.MovieRepository
+import com.example.androidacademyproject.fragments.fragmentlisteners.OnCardClickListener
 import com.example.androidacademyproject.providers.MovieRepositoryProvider
 import com.example.androidacademyproject.viewmodels.MoviesListViewModel
 import com.example.androidacademyproject.viewmodels.MoviesListViewModelFactory
 import kotlinx.coroutines.launch
 
-class MoviesList : Fragment() {
+class MoviesListFragment : Fragment() {
 
     lateinit var moviesListViewModel: MoviesListViewModel
 
@@ -79,11 +77,9 @@ class MoviesList : Fragment() {
             val recyclerView = view?.findViewById<RecyclerView>(R.id.movies_list_recycler_view)
 
             if (loadingFlag) {
-                Log.d("MyLog", "VISIBLE")
                 progressBar?.visibility = View.VISIBLE
                 recyclerView?.visibility = View.INVISIBLE
             } else {
-                Log.d("MyLog", "GONE")
                 progressBar?.visibility = View.GONE
                 recyclerView?.visibility = View.VISIBLE
             }
@@ -112,6 +108,6 @@ class MoviesList : Fragment() {
     }
 
     companion object {
-        fun create() = MoviesList()
+        fun create() = MoviesListFragment()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.adapters
+package com.example.androidacademyproject.fragments.moviedetails
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.androidacademyproject.model.Actor

@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.adapters
+package com.example.androidacademyproject.fragments.movieslist
 
 import android.graphics.Color
 import android.view.LayoutInflater
