@@ -1,5 +1,6 @@
 package com.example.androidacademyproject.model
 
+import android.graphics.Bitmap
 import java.io.Serializable
 
 data class Movie(
@@ -11,8 +12,8 @@ data class Movie(
         val reviewCount: Int,
         val isLiked: Boolean,
         val rating: Int,
-        val imageUrl: String,
-        val detailImageUrl: String,
+        val imageBitmap: Bitmap,
+        val detailImageBitmap: Bitmap,
         val storyLine: String,
         var actors: List<Actor>,
 ) : Serializable

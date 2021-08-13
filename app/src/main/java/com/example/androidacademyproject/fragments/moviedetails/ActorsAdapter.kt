@@ -29,7 +29,7 @@ class ActorsAdapter: ListAdapter<Actor, ActorsAdapter.ViewHolder>(ActorsCallback
         private val actorName: TextView? = itemView.findViewById(R.id.actor_name_text_view)
 
         fun bind(data: Actor) {
-            actorImage?.load(data.imageUrl)
+            actorImage?.load(data.imageBitmap)
             actorName?.text = data.name
         }
     }

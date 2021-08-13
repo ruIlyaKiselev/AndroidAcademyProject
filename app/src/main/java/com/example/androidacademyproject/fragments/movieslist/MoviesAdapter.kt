@@ -48,8 +48,7 @@ class MoviesAdapter(private val onClickCard: (item: Movie) -> Unit) :
         fun bind(data: Movie, onClickCard: (item: Movie) -> Unit) {
             val pinkStarColor = ResourcesCompat.getColor(view.resources, R.color.pink_star_color, null)
 
-//            mainImageView?.setImageURI(Uri.parse(data.imageUrl))
-            mainImageView?.load(data.imageUrl)
+            mainImageView?.load(data.imageBitmap)
             legalAgeTextView?.text = itemView.context.getString(
                     R.string.movies_list_allowed_age_template,
                     data.pgAge

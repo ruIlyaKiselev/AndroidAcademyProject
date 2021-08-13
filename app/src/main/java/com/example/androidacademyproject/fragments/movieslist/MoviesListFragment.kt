@@ -12,11 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidacademyproject.R
-import com.example.androidacademyproject.repository.MovieRepository
+import com.example.androidacademyproject.repository.IApiRepository
 import com.example.androidacademyproject.fragments.fragmentlisteners.OnCardClickListener
-import com.example.androidacademyproject.providers.MovieRepositoryProvider
-import com.example.androidacademyproject.viewmodels.MoviesListViewModel
-import com.example.androidacademyproject.viewmodels.MoviesListViewModelFactory
+import com.example.androidacademyproject.providers.MoviesRepositoryProvider
+import com.example.androidacademyproject.fragments.viewmodels.MoviesListViewModel
+import com.example.androidacademyproject.fragments.viewmodels.MoviesListViewModelFactory
+import com.example.androidacademyproject.repository.IRoomRepository
 import kotlinx.coroutines.launch
 
 class MoviesListFragment : Fragment() {
@@ -40,10 +41,11 @@ class MoviesListFragment : Fragment() {
             onItemClickListener?.openMovieDetails(movieData)
         }
 
-        val movieRepository = (requireActivity() as MovieRepositoryProvider).provideMovieRepository()
+        val apiMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideMovieRepository()
+        val roomMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideRoomRepository()
 
         initRecyclerView(adapter)
-        initMoviesListViewModel(adapter, movieRepository)
+        initMoviesListViewModel(adapter, apiMovieRepository, roomMovieRepository)
     }
 
     private fun initRecyclerView(adapter: MoviesAdapter) {
@@ -58,9 +60,13 @@ class MoviesListFragment : Fragment() {
         list?.adapter = adapter
     }
 
-    private fun initMoviesListViewModel(adapter: MoviesAdapter, movieRepository: MovieRepository) {
+    private fun initMoviesListViewModel(
+            adapter: MoviesAdapter,
+            apiRepository: IApiRepository,
+            roomRepository: IRoomRepository
+    ){
         moviesListViewModel = ViewModelProvider(this,
-                MoviesListViewModelFactory(movieRepository)).get(MoviesListViewModel::class.java)
+                MoviesListViewModelFactory(apiRepository, roomRepository)).get(MoviesListViewModel::class.java)
 
         moviesListViewModel.moviesList.observe(this.viewLifecycleOwner, {
             loadDataToAdapter(adapter)
@@ -78,10 +84,10 @@ class MoviesListFragment : Fragment() {
 
             if (loadingFlag) {
                 progressBar?.visibility = View.VISIBLE
-                recyclerView?.visibility = View.INVISIBLE
+                //recyclerView?.visibility = View.INVISIBLE
             } else {
                 progressBar?.visibility = View.GONE
-                recyclerView?.visibility = View.VISIBLE
+                //recyclerView?.visibility = View.VISIBLE
             }
         }
     }

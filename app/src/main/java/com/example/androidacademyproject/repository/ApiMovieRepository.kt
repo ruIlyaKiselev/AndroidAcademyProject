@@ -1,27 +1,37 @@
 package com.example.androidacademyproject.repository
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Parcelable
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import com.example.androidacademyproject.api.ApiContract
 import com.example.androidacademyproject.api.RetrofitDao
 import com.example.androidacademyproject.api.data.*
 import com.example.androidacademyproject.model.Actor
 import com.example.androidacademyproject.model.Genre
 import com.example.androidacademyproject.model.Movie
-import com.example.androidacademyproject.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import java.util.*
 
 @Parcelize
-class ApiMovieRepository: MovieRepository, Parcelable {
-    private val repository: RetrofitDao = RetrofitDao()
+class ApiMovieRepository(val context: @RawValue Context): IApiRepository, Parcelable {
+    @IgnoredOnParcel
+    private val dao: RetrofitDao = RetrofitDao()
+    @IgnoredOnParcel
     private val resultList: MutableList<Movie> = LinkedList()
 
     private suspend fun getPopularMoviesFromApi(apiKey: String,
                                                 language: String,
                                                 page: Int
     ): MovieMetaData {
-        val response = repository.getPopularMoviesMetaData(apiKey, language, page)
+        val response = dao.getPopularMoviesMetaData(apiKey, language, page)
         return if (response.isSuccessful) {
              response.body() as MovieMetaData
         } else {
@@ -33,7 +43,7 @@ class ApiMovieRepository: MovieRepository, Parcelable {
             apiKey: String,
             language: String
     ): ApiGenresMetaData {
-        val response = repository.getGenresMetaData(apiKey, language)
+        val response = dao.getGenresMetaData(apiKey, language)
         return if (response.isSuccessful) {
             response.body() as ApiGenresMetaData
         } else {
@@ -45,7 +55,7 @@ class ApiMovieRepository: MovieRepository, Parcelable {
                                                apiKey: String,
                                                language: String
     ): MovieCreditsMetaData {
-        val response = repository.getMovieCreditsMetaData(movieId, apiKey, language)
+        val response = dao.getMovieCreditsMetaData(movieId, apiKey, language)
         return if (response.isSuccessful) {
             response.body() as MovieCreditsMetaData
         } else {
@@ -57,7 +67,7 @@ class ApiMovieRepository: MovieRepository, Parcelable {
                                                apiKey: String,
                                                language: String
     ): ApiMovieDetails {
-        val response = repository.getMovieDetailsMetaData(movieId, apiKey, language)
+        val response = dao.getMovieDetailsMetaData(movieId, apiKey, language)
         return if (response.isSuccessful) {
             response.body() as ApiMovieDetails
         } else {
@@ -65,11 +75,11 @@ class ApiMovieRepository: MovieRepository, Parcelable {
         }
     }
 
-    suspend fun prepareActorsList(movieId: Int): List<Actor> = withContext(Dispatchers.IO)  {
+    private suspend fun prepareActorsList(movieId: Int): List<Actor> = withContext(Dispatchers.IO)  {
         val actorsList = getMovieCreditsFromApi(
                 movieId,
-                Constants.API_KEY,
-                Constants.DEFAULT_LANGUAGE
+                ApiContract.API_KEY,
+                ApiContract.DEFAULT_LANGUAGE
         ).cast
 
         val actorsForMovieResult: MutableList<Actor> =  LinkedList<Actor>()
@@ -78,9 +88,9 @@ class ApiMovieRepository: MovieRepository, Parcelable {
             if (item.imageUrl != null) {
                 actorsForMovieResult.add(
                         Actor(
-                                item.id,
-                                item.name,
-                                Constants.IMAGE_BASE_URL + item.imageUrl
+                                id = item.id,
+                                name = item.name,
+                                imageBitmap = getBitmap(ApiContract.IMAGE_BASE_URL + item.imageUrl)
                         )
 
                 )
@@ -95,9 +105,9 @@ class ApiMovieRepository: MovieRepository, Parcelable {
             return@withContext resultList
         }
 
-        val requestResult = getPopularMoviesFromApi(Constants.API_KEY, Constants.DEFAULT_LANGUAGE, 1)
+        val requestResult = getPopularMoviesFromApi(ApiContract.API_KEY, ApiContract.DEFAULT_LANGUAGE, 1)
 
-        val genres = getGenresListFromApi(Constants.API_KEY, Constants.DEFAULT_LANGUAGE).genres
+        val genres = getGenresListFromApi(ApiContract.API_KEY, ApiContract.DEFAULT_LANGUAGE).genres
 
         requestResult.results.forEach { movie ->
             val genresForResult: MutableList<Genre> = LinkedList()
@@ -109,27 +119,24 @@ class ApiMovieRepository: MovieRepository, Parcelable {
 
             val movieDuration = getMovieDetailsFromApi(
                     movie.id,
-                    Constants.API_KEY,
-                    Constants.DEFAULT_LANGUAGE
+                    ApiContract.API_KEY,
+                    ApiContract.DEFAULT_LANGUAGE
             ).runtime
-
-            //val actorsForMovieResult = prepareActorsList(movie)
 
             resultList.add(
                     Movie(
-                        movie.id,
-                        if (movie.adult) {13} else {16},
-                        movie.title,
-                        genresForResult,
-                            movieDuration,
-                        movie.voteCount,
-                        false,
-                        movie.voteAverage.toInt() / 2,
-                            Constants.IMAGE_BASE_URL + movie.posterPath,
-                            Constants.IMAGE_BASE_URL + movie.backdropPath,
-                        movie.overview,
-//                        actorsForMovieResult
-                        emptyList()
+                            id = movie.id,
+                            pgAge = if (movie.adult) {13} else {16},
+                            title = movie.title,
+                            genres = genresForResult,
+                            runningTime = movieDuration,
+                            reviewCount = movie.voteCount,
+                            isLiked = false,
+                            rating = movie.voteAverage.toInt() / 2,
+                            imageBitmap = getBitmap(ApiContract.IMAGE_BASE_URL + movie.posterPath),
+                            detailImageBitmap = getBitmap(ApiContract.IMAGE_BASE_URL + movie.backdropPath),
+                            storyLine = movie.overview,
+                            actors = emptyList()
                     )
             )
         }
@@ -148,5 +155,15 @@ class ApiMovieRepository: MovieRepository, Parcelable {
 
     override suspend fun loadActors(movieId: Int): List<Actor> {
         return prepareActorsList(movieId)
+    }
+
+    private suspend fun getBitmap(imageUri: String): Bitmap {
+        val loading = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+                .data(imageUri)
+                .build()
+
+        val result = (loading.execute(request) as SuccessResult).drawable
+        return (result as BitmapDrawable).bitmap
     }
 }

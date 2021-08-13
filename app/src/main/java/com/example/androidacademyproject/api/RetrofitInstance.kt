@@ -1,6 +1,5 @@
 package com.example.androidacademyproject.api
 
-import com.example.androidacademyproject.utils.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -27,12 +26,12 @@ object RetrofitInstance {
     private val retrofit by lazy {
         Retrofit.Builder()
             .client(httpClient)
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(ApiContract.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val api: SimpleApi by lazy {
-        retrofit.create(SimpleApi::class.java)
+    val api: ApiDao by lazy {
+        retrofit.create(ApiDao::class.java)
     }
 }

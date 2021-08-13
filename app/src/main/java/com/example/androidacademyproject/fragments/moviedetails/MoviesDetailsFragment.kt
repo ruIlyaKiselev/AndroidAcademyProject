@@ -17,12 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.androidacademyproject.R
-import com.example.androidacademyproject.repository.MovieRepository
+import com.example.androidacademyproject.repository.IApiRepository
 import com.example.androidacademyproject.fragments.fragmentlisteners.OnBackClickListener
 import com.example.androidacademyproject.model.Movie
-import com.example.androidacademyproject.providers.MovieRepositoryProvider
-import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModel
-import com.example.androidacademyproject.viewmodels.MoviesDetailsViewModelFactory
+import com.example.androidacademyproject.providers.MoviesRepositoryProvider
+import com.example.androidacademyproject.fragments.viewmodels.MoviesDetailsViewModel
+import com.example.androidacademyproject.fragments.viewmodels.MoviesDetailsViewModelFactory
+import com.example.androidacademyproject.repository.IRoomRepository
 import kotlinx.coroutines.launch
 
 class MoviesDetailsFragment: Fragment()  {
@@ -47,11 +48,12 @@ class MoviesDetailsFragment: Fragment()  {
 
         val movieId = args.movieId
         val actorsAdapter = ActorsAdapter()
-        val movieRepository = (requireActivity() as MovieRepositoryProvider).provideMovieRepository()
+        val apiMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideMovieRepository()
+        val roomMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideRoomRepository()
 
         initBackButton()
         initRecyclerView(actorsAdapter)
-        initMoviesDetailsViewModel(movieId, movieRepository)
+        initMoviesDetailsViewModel(movieId, apiMovieRepository, roomMovieRepository)
     }
 
     private fun initBackButton() {
@@ -67,9 +69,12 @@ class MoviesDetailsFragment: Fragment()  {
         list?.adapter = adapter
     }
 
-    private fun initMoviesDetailsViewModel(movieId: Int, movieRepository: MovieRepository) {
+    private fun initMoviesDetailsViewModel(movieId: Int,
+                                           apiRepository: IApiRepository,
+                                           roomRepository: IRoomRepository
+    ) {
         moviesDetailsViewModel = ViewModelProvider(this,
-                MoviesDetailsViewModelFactory(movieRepository)).get(MoviesDetailsViewModel::class.java)
+                MoviesDetailsViewModelFactory(apiRepository, roomRepository)).get(MoviesDetailsViewModel::class.java)
 
         moviesDetailsViewModel.loadMovie(movieId)
         moviesDetailsViewModel.movie.observe(this.viewLifecycleOwner, {
@@ -88,13 +93,13 @@ class MoviesDetailsFragment: Fragment()  {
 
             if (loadingFlag) {
                 progressBar?.visibility = View.VISIBLE
-                recyclerView?.visibility = View.INVISIBLE
+                //recyclerView?.visibility = View.INVISIBLE
             } else {
                 if (moviesDetailsViewModel.movie.value != null) {
                     bindUI(view, moviesDetailsViewModel.movie.value)
                 }
                 progressBar?.visibility = View.GONE
-                recyclerView?.visibility = View.VISIBLE
+                //recyclerView?.visibility = View.VISIBLE
             }
         }
     }
@@ -134,7 +139,7 @@ class MoviesDetailsFragment: Fragment()  {
         }
 
         view?.findViewById<ImageView>(R.id.movies_details_background_image)
-            ?.load(movie.detailImageUrl)
+            ?.load(movie.detailImageBitmap)
 
         view?.findViewById<TextView>(R.id.movies_details_legal_age_text_view)?.text =
                 context?.getString(R.string.movies_list_allowed_age_template, movie.pgAge)
