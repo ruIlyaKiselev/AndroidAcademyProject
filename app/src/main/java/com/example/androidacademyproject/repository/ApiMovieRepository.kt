@@ -131,7 +131,7 @@ class ApiMovieRepository(val context: @RawValue Context): IApiRepository, Parcel
         val requestResult = getPopularMoviesFromApi(
             ApiContract.API_KEY,
             ApiContract.DEFAULT_LANGUAGE,
-            1
+                1
         )
 
         val genres = getGenresListFromApi(ApiContract.API_KEY, ApiContract.DEFAULT_LANGUAGE).genres

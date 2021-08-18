@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.androidacademyproject.repository.ApiMovieRepository
 import com.example.androidacademyproject.repository.IApiRepository
@@ -16,6 +17,7 @@ import com.example.androidacademyproject.fragments.movieslist.MoviesListFragment
 import com.example.androidacademyproject.repository.RoomMovieRepository
 import com.example.androidacademyproject.repository.IRoomRepository
 import com.example.androidacademyproject.services.LoadNewDataWorker
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(),
         OnCardClickListener,
@@ -33,9 +35,14 @@ class MainActivity : AppCompatActivity(),
         apiMovieRepository = (application as CustomApplication).apiMovieRepository
         roomMovieRepository= (application as CustomApplication).roomMovieRepository
 
-        val simpleRequest = OneTimeWorkRequest.Builder(LoadNewDataWorker::class.java).build()
-//        WorkManager.getInstance(applicationContext)
-//            .enqueue(simpleRequest)
+        WorkManager.getInstance(applicationContext).cancelAllWorkByTag("LoadNewDataWorker")
+
+        val simpleRequest = PeriodicWorkRequest
+                .Builder(LoadNewDataWorker::class.java, 8, TimeUnit.HOURS)
+                .addTag("LoadNewDataWorker")
+                .build()
+
+//        WorkManager.getInstance(applicationContext).enqueue(simpleRequest)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
     }

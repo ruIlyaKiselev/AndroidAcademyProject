@@ -36,4 +36,11 @@ object RoomContract {
         const val COLUMN_NAME_STORYLINE = "storyLine"
         const val COLUMN_ACTORS = "actors"
     }
+
+    object UpdateTime {
+        const val TABLE_NAME = "UpdateTime"
+
+        const val COLUMN_NAME_ID = BaseColumns._ID
+        const val COLUMN_NAME_UPDATE_TIME = "updateTime"
+    }
 }

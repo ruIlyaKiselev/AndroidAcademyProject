@@ -27,22 +27,25 @@ class MoviesDetailsViewModel(
         val handler = CoroutineExceptionHandler { _, exception ->
             Log.e("MyLog","CoroutineExceptionHandler got $exception")
         }
-        var movie: Movie? = null
         viewModelScope.launch(handler + Dispatchers.IO) {
-            movie = apiRepository.loadMovie(movieId)
-        }
 
-        viewModelScope.launch(handler + Dispatchers.Main) {
+            launch(handler + Dispatchers.Main) {
+                mutableMovie.value = roomRepository.loadMovie(movieId)
+            }.join()
+
+            var movie: Movie? = null
+
+            movie = apiRepository.loadMovie(movieId)
+
             if (movie != null) {
-                mutableMovie.value = movie!!
-            } else {
-                viewModelScope.launch(handler + Dispatchers.IO) {
-                    movie = roomRepository.loadMovie(movieId)
+                launch(handler + Dispatchers.Main) {
+                    mutableMovie.value = movie!!
                 }.join()
-                mutableMovie.value = movie!!
             }
             if (mutableMovie!!.value!!.actors.isEmpty()) {
-                loadActors(movieId)
+                launch {
+                    loadActors(movieId)
+                }.join()
             }
         }
     }
@@ -51,28 +54,30 @@ class MoviesDetailsViewModel(
         val handler = CoroutineExceptionHandler { _, exception ->
             Log.e("MyLog","CoroutineExceptionHandler got $exception")
         }
-        mutableLoadingFlag.value = true
         viewModelScope.launch(handler + Dispatchers.IO) {
-            var actors: List<Actor> = emptyList()
-
             launch(handler + Dispatchers.Main) {
-                mutableMovie.value = roomRepository.loadMovie(movieId)
+                mutableLoadingFlag.value = true
             }
 
-            launch(handler + Dispatchers.IO) {
-                actors = apiRepository.loadActors(movieId)
-                if (actors.isNotEmpty()) {
-                    roomRepository.saveActors(actors)
-                }
+            launch(handler + Dispatchers.Main) {
+                mutableMovie.value?.actors = roomRepository.loadActors(movieId)
             }.join()
 
-            launch(handler + Dispatchers.Main) {
-                if (actors.isNotEmpty()) {
+            var actors: List<Actor> = emptyList()
+
+            launch {
+                actors = apiRepository.loadActors(movieId)
+            }.join()
+
+            Log.d("MyLog", actors.toString())
+            if (actors.isNotEmpty()) {
+                launch(handler + Dispatchers.Main) {
                     mutableMovie.value?.actors = actors
-                    launch(handler + Dispatchers.IO) {
-                        roomRepository.saveMovies(listOf(mutableMovie.value!!))
-                    }
-                }
+                }.join()
+                roomRepository.saveActors(actors)
+                roomRepository.saveMovies(listOf(mutableMovie.value!!))
+            }
+            launch(handler + Dispatchers.Main) {
                 mutableLoadingFlag.value = false
             }
         }

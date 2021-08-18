@@ -7,8 +7,7 @@ import androidx.room.Query
 import com.example.androidacademyproject.room.entity.ActorEntity
 import com.example.androidacademyproject.room.entity.GenreEntity
 import com.example.androidacademyproject.room.entity.MovieEntity
-import com.google.android.material.circularreveal.CircularRevealHelper
-import retrofit2.http.GET
+import com.example.androidacademyproject.room.entity.UpdateTimeEntity
 
 @Dao
 interface MoviesDao {
@@ -50,4 +49,13 @@ interface MoviesDao {
     suspend fun deleteGenre(id: Int)
     @Query("DELETE FROM genre")
     suspend fun deleteAllGenres()
+
+    @Query("SELECT * FROM updatetime")
+    suspend fun getUpdateTimes(): List<UpdateTimeEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUpdateTime(updateTime: UpdateTimeEntity)
+
+    @Query("DELETE FROM updatetime")
+    suspend fun deleteAllUpdateTimes()
 }

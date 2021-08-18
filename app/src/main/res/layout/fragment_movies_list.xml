@@ -39,12 +39,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movies_list_recycler_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/movies_list_constraint_layout"
         app:layout_constraintStart_toStartOf="@+id/movies_list_constraint_layout"
-        app:layout_constraintTop_toBottomOf="@+id/movies_list_page_name_iv">
+        app:layout_constraintTop_toBottomOf="@+id/movies_list_page_name_iv"
+        app:layout_constraintVertical_bias="0.0">
 
     </androidx.recyclerview.widget.RecyclerView>
 

@@ -7,14 +7,20 @@ import com.example.androidacademyproject.model.Actor
 import com.example.androidacademyproject.model.Genre
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.room.MoviesDatabase
+import com.example.androidacademyproject.room.RoomContract
 import com.example.androidacademyproject.room.entity.ActorEntity
 import com.example.androidacademyproject.room.entity.GenreEntity
 import com.example.androidacademyproject.room.entity.MovieEntity
+import com.example.androidacademyproject.room.entity.UpdateTimeEntity
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.IgnoredOnParcel
+import java.security.Timestamp
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Parcelize
@@ -117,8 +123,29 @@ class RoomMovieRepository(val context: @RawValue Context): IRoomRepository, Parc
     }
 
     override suspend fun saveMovies(movies: List<Movie>) {
-        if (movies.size == 20) {
-            moviesDatabase.dao.deleteAllMovies()
+        if (movies.size == 1) {
+            val movie = movies.first()
+            moviesDatabase.dao.insertMovie(
+                    MovieEntity(
+                            id = movie.id,
+                            pgAge = movie.pgAge,
+                            title = movie.title,
+                            genres = movie.genres.map { genre ->
+                                genre.id
+                            },
+                            runningTime = movie.runningTime,
+                            reviewCount = movie.reviewCount,
+                            isLiked = movie.isLiked,
+                            rating = movie.rating,
+                            imageBitmap = movie.imageBitmap,
+                            detailImageBitmap = movie.detailImageBitmap,
+                            storyLine = movie.storyLine,
+                            actors = movie.actors.map { actor ->
+                                actor.id
+                            }
+                    )
+            )
+            return
         }
 
         moviesDatabase.dao.insertMovies(movies.map { movie ->
@@ -160,5 +187,17 @@ class RoomMovieRepository(val context: @RawValue Context): IRoomRepository, Parc
                     name = genre.name
             )
         })
+    }
+
+    suspend fun setUpdateTime() {
+        moviesDatabase.dao.insertUpdateTime(
+                UpdateTimeEntity(
+                        lastUpdateTime = SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
+                )
+        )
+    }
+
+    suspend fun getUpdateTimes(): List<UpdateTimeEntity> {
+        return moviesDatabase.dao.getUpdateTimes()
     }
 }
