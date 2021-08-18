@@ -1,5 +1,6 @@
 package com.example.androidacademyproject.fragments.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.repository.IApiRepository
 import com.example.androidacademyproject.repository.IRoomRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -22,36 +24,43 @@ class MoviesListViewModel(
     val loadingFlag: LiveData<Boolean> = mutableLoadingFlag
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        val handler = CoroutineExceptionHandler { _, exception ->
+            Log.e("MyLog","CoroutineExceptionHandler got $exception")
+        }
+        viewModelScope.launch(handler + Dispatchers.Main) {
             loadMovies()
         }
     }
 
     private suspend fun loadMovies() {
-        mutableMoviesList.value = roomRepository.loadMovies()
+        val handler = CoroutineExceptionHandler { _, exception ->
+            Log.e("MyLog","CoroutineExceptionHandler got $exception")
+        }
+
         var moviesData: List<Movie> = emptyList()
         mutableLoadingFlag.value = true
-        viewModelScope.launch {
-            val request = launch(Dispatchers.IO) {
-                try {
-                    moviesData = apiRepository.loadMovies()
-                    launch(Dispatchers.Main) {
-                        mutableMoviesList.value = moviesData
-                    }
-                } catch (e: Exception) {}
+        viewModelScope.launch(Dispatchers.IO) {
+            moviesData = roomRepository.loadMovies()
+
+            if (moviesData.isNotEmpty()) {
+                launch (Dispatchers.Main) {
+                    mutableMoviesList.value = moviesData
+                }.join()
             }
 
-            request.join()
+            moviesData = apiRepository.loadMovies()
 
-            launch(Dispatchers.IO) {
-                if (moviesData.isNotEmpty()) {
+            if (moviesData.isNotEmpty()) {
+                launch(handler + Dispatchers.Main) {
+                    mutableMoviesList.value = moviesData
                     roomRepository.saveMovies(moviesData)
                     moviesData.forEach { movie ->
                         roomRepository.saveGenres(movie.genres)
                     }
                 }
             }
-        }
+        }.join()
+
         mutableLoadingFlag.value = false
     }
 }

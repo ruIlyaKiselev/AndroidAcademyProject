@@ -80,6 +80,9 @@ dependencies {
     implementation "androidx.room:room-ktx:2.3.0"
     androidTestImplementation "androidx.room:room-testing:2.3.0"
 
+    // Services and workmanagers
+    implementation 'androidx.work:work-runtime:2.5.0'
+
     testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

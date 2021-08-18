@@ -50,9 +50,10 @@ class RoomMovieRepository(val context: @RawValue Context): IRoomRepository, Parc
 
     override suspend fun loadActors(movieId: Int): List<Actor> = withContext(Dispatchers.IO)  {
         val actorsForResult: MutableList<Actor> = LinkedList<Actor>()
-        moviesDatabase.dao.getMovie(movieId).actors.forEach { actorId ->
-            val actorEntity = moviesDatabase.dao.getActor(actorId)
-            Log.d("MyLog", actorEntity.toString())
+        val movie = loadMovie(movieId)
+
+        movie?.actors?.forEach { actor ->
+            val actorEntity = moviesDatabase.dao.getActor(actor.id)
             actorsForResult.add(
                 Actor(
                         id = actorEntity.id,
@@ -61,7 +62,6 @@ class RoomMovieRepository(val context: @RawValue Context): IRoomRepository, Parc
                 )
             )
         }
-        Log.d("MyLog", actorsForResult.toString())
         return@withContext actorsForResult
     }
 
@@ -86,7 +86,14 @@ class RoomMovieRepository(val context: @RawValue Context): IRoomRepository, Parc
                             imageBitmap = movieEntity.imageBitmap,
                             detailImageBitmap = movieEntity.detailImageBitmap,
                             storyLine = movieEntity.storyLine,
-                            actors = emptyList()
+                            actors = movieEntity.actors.map { actorId ->
+                                val actorEntity = moviesDatabase.dao.getActor(actorId)
+                                    Actor(
+                                            actorEntity.id,
+                                            actorEntity.name,
+                                            actorEntity.imageBitmap
+                                    )
+                            }
                     )
             )
         }
@@ -110,6 +117,9 @@ class RoomMovieRepository(val context: @RawValue Context): IRoomRepository, Parc
     }
 
     override suspend fun saveMovies(movies: List<Movie>) {
+        if (movies.size == 20) {
+            moviesDatabase.dao.deleteAllMovies()
+        }
 
         moviesDatabase.dao.insertMovies(movies.map { movie ->
             MovieEntity(

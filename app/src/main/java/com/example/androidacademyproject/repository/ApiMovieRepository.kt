@@ -27,52 +27,75 @@ class ApiMovieRepository(val context: @RawValue Context): IApiRepository, Parcel
     @IgnoredOnParcel
     private val resultList: MutableList<Movie> = LinkedList()
 
-    private suspend fun getPopularMoviesFromApi(apiKey: String,
-                                                language: String,
-                                                page: Int
+    private suspend fun getPopularMoviesFromApi(
+            apiKey: String,
+            language: String,
+            page: Int
     ): MovieMetaData {
-        val response = dao.getPopularMoviesMetaData(apiKey, language, page)
-        return if (response.isSuccessful) {
-             response.body() as MovieMetaData
-        } else {
-            return MovieMetaData(emptyList())
+        try {
+            val response = dao.getPopularMoviesMetaData(apiKey, language, page)
+            return if (response.isSuccessful) {
+                response.body() as MovieMetaData
+            } else {
+                return MovieMetaData(emptyList())
+            }
+        } catch (e: Exception) {
+
         }
+        return MovieMetaData(emptyList())
     }
 
     private suspend fun getGenresListFromApi(
             apiKey: String,
             language: String
     ): ApiGenresMetaData {
-        val response = dao.getGenresMetaData(apiKey, language)
-        return if (response.isSuccessful) {
-            response.body() as ApiGenresMetaData
-        } else {
-            return ApiGenresMetaData(emptyList())
+        try {
+            val response = dao.getGenresMetaData(apiKey, language)
+            return if (response.isSuccessful) {
+                response.body() as ApiGenresMetaData
+            } else {
+                return ApiGenresMetaData(emptyList())
+            }
+        } catch (e: Exception) {
+
         }
+        return ApiGenresMetaData(emptyList())
     }
 
-    private suspend fun getMovieCreditsFromApi(movieId: Int,
-                                               apiKey: String,
-                                               language: String
+    private suspend fun getMovieCreditsFromApi(
+            movieId: Int,
+            apiKey: String,
+            language: String
     ): MovieCreditsMetaData {
-        val response = dao.getMovieCreditsMetaData(movieId, apiKey, language)
-        return if (response.isSuccessful) {
-            response.body() as MovieCreditsMetaData
-        } else {
-            return MovieCreditsMetaData(emptyList())
+        try {
+            val response = dao.getMovieCreditsMetaData(movieId, apiKey, language)
+            return if (response.isSuccessful) {
+                response.body() as MovieCreditsMetaData
+            } else {
+                return MovieCreditsMetaData(emptyList())
+            }
+        } catch (e: Exception) {
+
         }
+        return MovieCreditsMetaData(emptyList())
     }
 
-    private suspend fun getMovieDetailsFromApi(movieId: Int,
-                                               apiKey: String,
-                                               language: String
+    private suspend fun getMovieDetailsFromApi(
+            movieId: Int,
+            apiKey: String,
+            language: String
     ): ApiMovieDetails {
-        val response = dao.getMovieDetailsMetaData(movieId, apiKey, language)
-        return if (response.isSuccessful) {
-            response.body() as ApiMovieDetails
-        } else {
-            return ApiMovieDetails(0, 0)
+        try {
+            val response = dao.getMovieDetailsMetaData(movieId, apiKey, language)
+            return if (response.isSuccessful) {
+                response.body() as ApiMovieDetails
+            } else {
+                return ApiMovieDetails(0, 0)
+            }
+        } catch (e: Exception) {
+
         }
+        return ApiMovieDetails(0, 0)
     }
 
     private suspend fun prepareActorsList(movieId: Int): List<Actor> = withContext(Dispatchers.IO)  {
@@ -105,7 +128,11 @@ class ApiMovieRepository(val context: @RawValue Context): IApiRepository, Parcel
             return@withContext resultList
         }
 
-        val requestResult = getPopularMoviesFromApi(ApiContract.API_KEY, ApiContract.DEFAULT_LANGUAGE, 1)
+        val requestResult = getPopularMoviesFromApi(
+            ApiContract.API_KEY,
+            ApiContract.DEFAULT_LANGUAGE,
+            1
+        )
 
         val genres = getGenresListFromApi(ApiContract.API_KEY, ApiContract.DEFAULT_LANGUAGE).genres
 

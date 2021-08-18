@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class MoviesListFragment : Fragment() {
 
     lateinit var moviesListViewModel: MoviesListViewModel
-
+    private lateinit var adapter: MoviesAdapter
     private var onItemClickListener: OnCardClickListener? = null
 
     override fun onCreateView(
@@ -37,14 +37,17 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = MoviesAdapter { movieData ->
+        adapter = MoviesAdapter { movieData ->
             onItemClickListener?.openMovieDetails(movieData)
         }
 
+        initRecyclerView(adapter)
+    }
+
+    override fun onStart() {
+        super.onStart()
         val apiMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideMovieRepository()
         val roomMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideRoomRepository()
-
-        initRecyclerView(adapter)
         initMoviesListViewModel(adapter, apiMovieRepository, roomMovieRepository)
     }
 

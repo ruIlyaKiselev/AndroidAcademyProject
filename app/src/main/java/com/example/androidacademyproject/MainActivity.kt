@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.example.androidacademyproject.repository.ApiMovieRepository
 import com.example.androidacademyproject.repository.IApiRepository
 import com.example.androidacademyproject.fragments.fragmentlisteners.OnBackClickListener
@@ -13,31 +15,27 @@ import com.example.androidacademyproject.providers.MoviesRepositoryProvider
 import com.example.androidacademyproject.fragments.movieslist.MoviesListFragmentDirections
 import com.example.androidacademyproject.repository.RoomMovieRepository
 import com.example.androidacademyproject.repository.IRoomRepository
+import com.example.androidacademyproject.services.LoadNewDataWorker
 
 class MainActivity : AppCompatActivity(),
         OnCardClickListener,
         OnBackClickListener,
         MoviesRepositoryProvider {
 
-    private var apiMovieRepository: ApiMovieRepository = ApiMovieRepository(this)
-    //private var roomMovieRepository: RoomMovieRepository = RoomMovieRepository(applicationContext)
+    private lateinit var apiMovieRepository: ApiMovieRepository
+    private lateinit var roomMovieRepository: RoomMovieRepository
     lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState?.containsKey("ApiMovieRepository") == true) {
-            apiMovieRepository = savedInstanceState?.getParcelable<ApiMovieRepository>(
-                    "ApiMovieRepository"
-            ) ?: ApiMovieRepository(this)
-        }
+        apiMovieRepository = (application as CustomApplication).apiMovieRepository
+        roomMovieRepository= (application as CustomApplication).roomMovieRepository
 
-//        if (savedInstanceState?.containsKey("RoomMovieRepository") == true) {
-//            roomMovieRepository = savedInstanceState?.getParcelable<RoomMovieRepository>(
-//                    "RoomMovieRepository"
-//            ) ?: RoomMovieRepository(this)
-//        }
+        val simpleRequest = OneTimeWorkRequest.Builder(LoadNewDataWorker::class.java).build()
+//        WorkManager.getInstance(applicationContext)
+//            .enqueue(simpleRequest)
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
     }
@@ -62,23 +60,6 @@ class MainActivity : AppCompatActivity(),
         navController.navigateUp()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable("ApiMovieRepository", apiMovieRepository)
-//        outState.putParcelable("RoomMovieRepository", roomMovieRepository)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        apiMovieRepository = savedInstanceState.getParcelable<ApiMovieRepository>(
-                "ApiMovieRepository"
-        ) ?: ApiMovieRepository(this)
-
-//        roomMovieRepository = savedInstanceState.getParcelable<RoomMovieRepository>(
-//                "RoomMovieRepository"
-//        ) ?: RoomMovieRepository(this)
-    }
-
     override fun provideMovieRepository(): IApiRepository = apiMovieRepository
-    override fun provideRoomRepository(): IRoomRepository = RoomMovieRepository(this)
+    override fun provideRoomRepository(): IRoomRepository = roomMovieRepository
 }

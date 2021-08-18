@@ -46,16 +46,23 @@ class MoviesDetailsFragment: Fragment()  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val movieId = args.movieId
+//        val movieId = args.movieId
         val actorsAdapter = ActorsAdapter()
-        val apiMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideMovieRepository()
-        val roomMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideRoomRepository()
+//        val apiMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideMovieRepository()
+//        val roomMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideRoomRepository()
 
         initBackButton()
         initRecyclerView(actorsAdapter)
-        initMoviesDetailsViewModel(movieId, apiMovieRepository, roomMovieRepository)
+//        initMoviesDetailsViewModel(movieId, apiMovieRepository, roomMovieRepository)
     }
 
+    override fun onStart() {
+        super.onStart()
+        val movieId = args.movieId
+        val apiMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideMovieRepository()
+        val roomMovieRepository = (requireActivity() as MoviesRepositoryProvider).provideRoomRepository()
+        initMoviesDetailsViewModel(movieId, apiMovieRepository, roomMovieRepository)
+    }
     private fun initBackButton() {
         view?.findViewById<LinearLayout>(R.id.movies_details_back_composite_button)?.setOnClickListener {
             onBackClickListener?.backToMoviesList()

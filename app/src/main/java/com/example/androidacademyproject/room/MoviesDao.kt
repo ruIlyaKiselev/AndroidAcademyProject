@@ -22,6 +22,8 @@ interface MoviesDao {
     suspend fun insertActors(actors: List<ActorEntity>)
     @Query("DELETE FROM actor WHERE _id == :id")
     suspend fun deleteActor(id: Int)
+    @Query("DELETE FROM actor")
+    suspend fun deleteAllActors()
 
     @Query("SELECT * FROM movie ORDER BY _id ASC")
     suspend fun getAllMovies(): List<MovieEntity>
@@ -33,6 +35,8 @@ interface MoviesDao {
     suspend fun insertMovies(movies: List<MovieEntity>)
     @Query("DELETE FROM movie WHERE _id == :id")
     suspend fun deleteMovie(id: Int)
+    @Query("DELETE FROM movie")
+    suspend fun deleteAllMovies()
 
     @Query("SELECT * FROM genre ORDER BY _id ASC")
     suspend fun getAllGenres(): List<GenreEntity>
@@ -44,4 +48,6 @@ interface MoviesDao {
     suspend fun insertGenres(genres: List<GenreEntity>)
     @Query("DELETE FROM genre WHERE _id == :id")
     suspend fun deleteGenre(id: Int)
+    @Query("DELETE FROM genre")
+    suspend fun deleteAllGenres()
 }
