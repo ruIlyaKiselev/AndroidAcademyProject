@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments.movieslist
+package com.example.androidacademyproject.presentationlayer.movieslist
 
 import android.content.Context
 import android.os.Bundle
@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidacademyproject.R
 import com.example.androidacademyproject.repository.IApiRepository
-import com.example.androidacademyproject.fragments.fragmentlisteners.OnCardClickListener
+import com.example.androidacademyproject.presentationlayer.fragmentlisteners.OnCardClickListener
 import com.example.androidacademyproject.providers.MoviesRepositoryProvider
-import com.example.androidacademyproject.fragments.viewmodels.MoviesListViewModel
-import com.example.androidacademyproject.fragments.viewmodels.MoviesListViewModelFactory
+import com.example.androidacademyproject.presentationlayer.movieslist.viewmodel.MoviesListViewModel
+import com.example.androidacademyproject.presentationlayer.movieslist.viewmodel.MoviesListViewModelFactory
 import com.example.androidacademyproject.repository.IRoomRepository
 import kotlinx.coroutines.launch
 

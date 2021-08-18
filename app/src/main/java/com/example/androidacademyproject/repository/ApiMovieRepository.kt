@@ -7,9 +7,9 @@ import android.os.Parcelable
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.example.androidacademyproject.api.ApiContract
-import com.example.androidacademyproject.api.RetrofitDao
-import com.example.androidacademyproject.api.data.*
+import com.example.androidacademyproject.networkapi.ApiContract
+import com.example.androidacademyproject.networkapi.RetrofitDao
+import com.example.androidacademyproject.networkapi.data.*
 import com.example.androidacademyproject.model.Actor
 import com.example.androidacademyproject.model.Genre
 import com.example.androidacademyproject.model.Movie

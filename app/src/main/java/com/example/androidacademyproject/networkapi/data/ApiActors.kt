@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.api.data
+package com.example.androidacademyproject.networkapi.data
 
 import com.google.gson.annotations.SerializedName
 

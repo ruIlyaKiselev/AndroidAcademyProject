@@ -16,8 +16,8 @@ import kotlin.coroutines.CoroutineContext
 class LoadNewDataWorker(context: Context, params: WorkerParameters): Worker(context, params), CoroutineScope{
     private val customApplication = applicationContext as CustomApplication
 
-    val roomRepository = RoomMovieRepository(context)
-    val apiRepository = ApiMovieRepository(context)
+    val roomRepository = customApplication.roomMovieRepository
+    val apiRepository = ApiMovieRepository(applicationContext)
 
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
@@ -26,6 +26,7 @@ class LoadNewDataWorker(context: Context, params: WorkerParameters): Worker(cont
 
         launch {
             loadMovies()
+            roomRepository.setUpdateTime()
         }
 
         return Result.success()
@@ -38,7 +39,7 @@ class LoadNewDataWorker(context: Context, params: WorkerParameters): Worker(cont
 
         var moviesData: List<Movie> = emptyList()
         coroutineScope {
-            launch(Dispatchers.IO) {
+            launch(handler + Dispatchers.IO) {
                 moviesData = apiRepository.loadMovies()
 
                 if (moviesData.isNotEmpty()) {
@@ -58,15 +59,19 @@ class LoadNewDataWorker(context: Context, params: WorkerParameters): Worker(cont
     }
 
     private fun loadActors(moviesData: List<Movie>) {
-        launch(Dispatchers.IO) {
+        val handler = CoroutineExceptionHandler { _, exception ->
+            Log.e("MyLog","CoroutineExceptionHandler got $exception")
+        }
+
+        launch(handler + Dispatchers.IO) {
             moviesData.forEach { movie ->
-                val handler = CoroutineExceptionHandler { _, exception ->
+                CoroutineExceptionHandler { _, exception ->
                     Log.e("MyLog", "CoroutineExceptionHandler got $exception")
                 }
                 launch(handler + Dispatchers.IO) {
                     var actors: List<Actor> = emptyList()
 
-                    launch {
+                    launch(handler + Dispatchers.IO) {
                         actors = apiRepository.loadActors(movie.id)
                     }.join()
 

@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.api
+package com.example.androidacademyproject.networkapi
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

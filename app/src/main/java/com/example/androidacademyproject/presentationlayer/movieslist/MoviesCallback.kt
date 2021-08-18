@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments.movieslist
+package com.example.androidacademyproject.presentationlayer.movieslist
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.androidacademyproject.model.Movie

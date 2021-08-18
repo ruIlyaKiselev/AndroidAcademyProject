@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments.viewmodels
+package com.example.androidacademyproject.presentationlayer.moviedetails.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData

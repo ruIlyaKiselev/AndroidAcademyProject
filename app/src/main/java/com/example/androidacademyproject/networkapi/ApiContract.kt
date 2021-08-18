@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.api
+package com.example.androidacademyproject.networkapi
 
 object ApiContract {
     const val BASE_URL = "https://api.themoviedb.org/3/"

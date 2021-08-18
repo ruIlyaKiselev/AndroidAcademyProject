@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments.moviedetails
+package com.example.androidacademyproject.presentationlayer.moviedetails
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.androidacademyproject.R
 import com.example.androidacademyproject.repository.IApiRepository
-import com.example.androidacademyproject.fragments.fragmentlisteners.OnBackClickListener
+import com.example.androidacademyproject.presentationlayer.fragmentlisteners.OnBackClickListener
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.providers.MoviesRepositoryProvider
-import com.example.androidacademyproject.fragments.viewmodels.MoviesDetailsViewModel
-import com.example.androidacademyproject.fragments.viewmodels.MoviesDetailsViewModelFactory
+import com.example.androidacademyproject.presentationlayer.moviedetails.viewmodel.MoviesDetailsViewModel
+import com.example.androidacademyproject.presentationlayer.moviedetails.viewmodel.MoviesDetailsViewModelFactory
 import com.example.androidacademyproject.repository.IRoomRepository
 import kotlinx.coroutines.launch
 

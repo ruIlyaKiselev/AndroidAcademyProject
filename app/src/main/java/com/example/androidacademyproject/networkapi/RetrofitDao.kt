@@ -1,7 +1,6 @@
-package com.example.androidacademyproject.api
+package com.example.androidacademyproject.networkapi
 
-import com.example.androidacademyproject.api.RetrofitInstance
-import com.example.androidacademyproject.api.data.*
+import com.example.androidacademyproject.networkapi.data.*
 import retrofit2.Response
 
 class RetrofitDao {

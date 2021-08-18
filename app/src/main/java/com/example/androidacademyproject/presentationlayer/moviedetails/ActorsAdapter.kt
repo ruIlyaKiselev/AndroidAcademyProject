@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments.moviedetails
+package com.example.androidacademyproject.presentationlayer.moviedetails
 
 import android.view.LayoutInflater
 import android.view.View

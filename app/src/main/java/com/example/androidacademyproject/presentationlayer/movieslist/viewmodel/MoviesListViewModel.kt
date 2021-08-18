@@ -1,17 +1,20 @@
-package com.example.androidacademyproject.fragments.viewmodels
+package com.example.androidacademyproject.presentationlayer.movieslist.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.example.androidacademyproject.model.Actor
 import com.example.androidacademyproject.model.Movie
 import com.example.androidacademyproject.repository.IApiRepository
 import com.example.androidacademyproject.repository.IRoomRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 class MoviesListViewModel(
         private val apiRepository: IApiRepository,
@@ -65,7 +68,9 @@ class MoviesListViewModel(
 
         mutableLoadingFlag.value = false
 
-        loadActors(moviesData)
+        viewModelScope.launch(handler + Dispatchers.IO) {
+            loadActors(moviesData)
+        }
     }
 
     private suspend fun loadActors(moviesData: List<Movie>) {

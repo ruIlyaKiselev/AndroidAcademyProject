@@ -1,6 +1,6 @@
-package com.example.androidacademyproject.api
+package com.example.androidacademyproject.networkapi
 
-import com.example.androidacademyproject.api.data.*
+import com.example.androidacademyproject.networkapi.data.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

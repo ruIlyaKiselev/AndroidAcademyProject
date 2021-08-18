@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.fragments.fragmentlisteners
+package com.example.androidacademyproject.presentationlayer.fragmentlisteners
 
 import com.example.androidacademyproject.model.Movie
 

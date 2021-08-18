@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidAcademyProject"
         android:name=".CustomApplication">
-        <activity android:name=".MainActivity">
+        <activity android:name=".presentationlayer.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

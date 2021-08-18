@@ -1,4 +1,4 @@
-package com.example.androidacademyproject.api.data
+package com.example.androidacademyproject.networkapi.data
 
 data class ApiGenresMetaData(
         val genres: List<ApiGenres>
